@@ -1,142 +1,61 @@
 <!DOCTYPE html>
-<title>靠北曙光</title>
-<h1>靠北曙光<h1>
-<html lang="en">
-
-<head>
-
- <meta charset="UTF-8">
-
- <title>Title</title>
-
- <style>
-
- * {
-
-  margin: 0;
-
-  padding: 0;
-
- }
-
- 
-
- body {
-
-  padding: 100px;
-
- }
-
- textarea {
-
-  width: 200px;
-
-  height: 100px;
-
-  border: 1px solid pink;
-
-  outline: none;
-
-  resize: none;
-
- }
-
- 
-
- ul {
-
-  margin-top: 50px;
-
-     }
-
- 
-
- li {
-
-  list-style: none;
-
-  width: 300px;
-
-  padding: 5px;
-
-  background-color: rgb(245,209,243);
-
-  color: red;
-
-  font-size: 14px;
-
-  margin: 15px 0;
-
- }
-
- 
-
- li a {
-
-  float: right;
-
-  text-decoration: none;
-
- }
-
- </style>
-
-</head>
-
-<body>
-
-<textarea name="" id=""></textarea>
-
-<button>釋出</button>
-
-<ul>
-
- 
-
-</ul>
-
-<script>
-
- var btn=document.querySelector('button')
-
- var textarea=document.querySelector('textarea')
-
- var ul=document.querySelector('ul')
-
- btn.onclick=function () {
-
- if (textarea.value==''){
-
-  alert('寧沒有輸入內容')
-
-  return false
-
- }else{
-
-  var li=document.createElement('li')
-
-  li.innerHTML=textarea.value+"<a href='javascript:;'></a>"
-
-  ul.insertBefore(li,ul.children[0])
-
-  var as=document.querySelectorAll('a')
-
-  for (var i=0;i<as.length;i++){
-
-  as[i].onclick=function () {
-
-   ul.removeChild(this.parentNode)
-
-  }
-
-  }
-
- }
-
- }
-
-</script>
-
-</body>
-
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        <h1>留言板</h1>
+        <textarea id="memo" cols="60" rows="10"></textarea>
+        <input type="button" value="追加内容" onclick="saveStorage('memo')" />
+        <input type="button" value="初始化" onclick="clearStorage('msg')" />
+        <hr />
+        <p id="msg"></p>
+        <script type="text/javascript">
+
+            function saveStorage(id) {
+                //获取textarea的value值
+                var data = document.getElementById(id).value;
+                //获取当前时间戳
+                var time = new Date().getTime();
+                //将时间戳作为键值，textarea的value值作为键值的内容保存在本地数据库
+                localStorage.setItem(time,data);
+                //保存成功后提示成功
+                console.log("数据已保存");
+                //设置loadStorage函数的传参（ID值）
+                loadStorage('msg');
+            }
+
+            function loadStorage(id) {
+                var result = '<table border="1">';
+                //遍历本地数据所有内容
+                for(var i = 0; i < localStorage.length; i++) {
+                    //获取每一条新增的键值
+                    var kes = localStorage.key(i);
+                    //获取新增键值的内容
+                    var value = localStorage.getItem(kes);
+                    //获取时间对象
+                    var date = new Date();
+                    //将时间戳转化为正常时间 Mon Jun 19 1972 11:12:44 GMT+0800 (中国标准时间) 的格式
+                    date.setTime(kes);
+                    //将转化后的内容变成字符串
+                    var datestr = date.toGMTString();
+                    //将所有新增内容添加到result变量中
+                    result += '<tr><td>' + value + '</td><td>' + datestr + '</td></tr>'
+                }
+                result += '</table>';
+                var target = document.getElementById(id);
+                //将所有内容添加到元素中显示
+                target.innerHTML = result;
+
+            }
+
+            function clearStorage() {
+                //清除本地储存所有内容
+                localStorage.clear();  
+                console.log("清除完毕");
+            }
+
+        </script>
+    </body>
 </html>
